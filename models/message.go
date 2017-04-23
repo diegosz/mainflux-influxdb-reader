@@ -34,7 +34,7 @@ type (
 		////
 		Publisher string `json:"publisher"`
 		Protocol  string `json:"protocol"`
-		Timestamp string `json:"timestamp"`
+		Created   string `json:"created"`
 
 		// Channel to which this message belongs
 		Channel string `json:"channel"`

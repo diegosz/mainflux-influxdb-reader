@@ -101,8 +101,8 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 				m.Publisher = x.(string)
 			case "protocol":
 				m.Protocol = x.(string)
-			case "timestamp":
-				m.Timestamp = x.(string)
+			case "created":
+				m.Created = x.(string)
 			}
 		}
 
