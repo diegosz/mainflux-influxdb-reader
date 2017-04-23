@@ -1,0 +1,50 @@
+###
+# Copyright (c) Mainflux
+#
+# Mainflux server is licensed under an Apache license, version 2.0 license.
+# All rights not explicitly granted in the Apache license, version 2.0 are reserved.
+# See the included LICENSE file for more details.
+###
+
+###
+# MongoDB
+###
+mongo:
+  image: mongo:latest
+  ports:
+    - "27017:27017"
+    - "28017:28017"
+  container_name: mainflux-mongodb
+  command: --smallfiles --nojournal
+
+###
+# Redis
+###
+redis:
+  image: redis:latest
+  container_name: mainflux-redis
+  ports:
+    - "6379:6379"
+
+###
+# Mainflux MQTT Broker
+###
+mainflux-mqtt:
+  image: mainflux/mainflux-mqtt:latest
+  container_name: mainflux-mqtt
+  ports:
+    - "1883:1883"
+    - "8883:8883"
+
+###
+# Mainflux Core Server
+###
+mainflux-core:
+  image: mainflux/mainflux-core:latest
+  container_name: mainflux-core
+  links:
+    - mongo
+    - redis
+    - mainflux-mqtt
+  ports:
+    - "7070:7070"

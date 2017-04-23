@@ -1,0 +1,21 @@
+package: github.com/mainflux/mainflux-influxdb-reader
+import:
+- package: github.com/codegangsta/negroni
+  version: ^0.2.0
+- package: github.com/fatih/color
+  version: ^1.4.1
+- package: github.com/go-zoo/bone
+  version: ^1.2.0
+- package: github.com/influxdata/influxdb
+  version: ^1.2.3
+  subpackages:
+  - client/v2
+- package: github.com/xeipuuv/gojsonschema
+testImport:
+- package: github.com/mainflux/mainflux-core
+  subpackages:
+  - api
+  - db
+- package: gopkg.in/mgo.v2
+- package: gopkg.in/ory-am/dockertest.v3
+  version: ^3.0.6
