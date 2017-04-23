@@ -9,8 +9,6 @@
 package api_test
 
 import (
-	"fmt"
-	"log"
 	"net/http/httptest"
 	"os"
 	"testing"
