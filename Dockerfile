@@ -18,5 +18,5 @@ RUN cd /go/src/github.com/mainflux/mainflux-influxdb-reader && go install
 ###
 # Run main command with dockerize
 ###
-CMD mainflux-influxdb-reader -i INFLUX_HOST
+CMD mainflux-influxdb-reader -i $INFLUX_HOST
 
