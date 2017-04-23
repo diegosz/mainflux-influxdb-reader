@@ -14,7 +14,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/go-zoo/bone"
@@ -31,37 +30,26 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 	// Get fileter values from parameters:
 	// - start_time = messages from this moment. UNIX time format.
 	// - end_time = messages to this moment. UNIX time format.
-	var st float64
-	var et float64
+	var st string
+	var et string
 	var err error
-	var s string
-	s = r.URL.Query().Get("start_time")
-	if len(s) == 0 {
-		st = 0
-	} else {
-		st, err = strconv.ParseFloat(s, 64)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			str := `{"response": "wrong start_time format"}`
-			io.WriteString(w, str)
-			return
-		}
+	st = r.URL.Query().Get("start_time")
+	if len(st) == 0 {
+		// Invoking an empty time.Time struct literal will return Go's zero date.
+		// fmt.Println(time.Time{}) -> 0001-01-01 00:00:00 +0000 UTC
+		// st = time.Time{}.Format(time.RFC3339)
+		// However, InfluxDB currently does not support times before Unix epoch.
+		// The Unix epoch is the time 00:00:00 UTC on 1 January 1970
+		st = "1970-01-01T00:00:00Z"
 	}
-	s = r.URL.Query().Get("end_time")
-	if len(s) == 0 {
-		et = float64(time.Now().Unix())
-	} else {
-		et, err = strconv.ParseFloat(s, 64)
-		if err != nil {
-			w.WriteHeader(http.StatusBadRequest)
-			str := `{"response": "wrong end_time format"}`
-			io.WriteString(w, str)
-			return
-		}
+
+	et = r.URL.Query().Get("end_time")
+	if len(et) == 0 {
+		et = time.Now().Format(time.RFC3339)
 	}
 
 	println(st, et)
-	q := fmt.Sprintf("SELECT * FROM \"%s\"", cid)
+	q := fmt.Sprintf("SELECT * FROM \"%s\" WHERE time >= '%s' AND time <= '%s'", cid, st, et)
 	results, e := db.InfluxQueryDB(q)
 	if e != nil {
 		log.Fatal(e)
