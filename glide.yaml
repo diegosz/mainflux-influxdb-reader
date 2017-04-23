@@ -10,12 +10,3 @@ import:
   version: ^1.2.3
   subpackages:
   - client/v2
-- package: github.com/xeipuuv/gojsonschema
-testImport:
-- package: github.com/mainflux/mainflux-core
-  subpackages:
-  - api
-  - db
-- package: gopkg.in/mgo.v2
-- package: gopkg.in/ory-am/dockertest.v3
-  version: ^3.0.6
