@@ -1,5 +1,7 @@
 package: github.com/mainflux/mainflux-influxdb-reader
 import:
+- package: github.com/cenkalti/backoff
+  version: ^1.0.0
 - package: github.com/codegangsta/negroni
   version: ^0.2.0
 - package: github.com/fatih/color

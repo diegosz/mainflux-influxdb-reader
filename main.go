@@ -15,6 +15,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/cenkalti/backoff"
 	"github.com/fatih/color"
 	"github.com/mainflux/mainflux-influxdb-reader/api"
 	"github.com/mainflux/mainflux-influxdb-reader/db"
@@ -52,9 +53,28 @@ type (
 	}
 )
 
-func main() {
-	opts := Opts{}
+var (
+	opts Opts
+)
 
+func tryInfluxInit() error {
+	var err error
+
+	log.Print("Connecting to InfluxDB... ")
+	if err = db.InfluxInit(opts.InfluxHost, opts.InfluxPort, opts.InfluxDatabase,
+		opts.InfluxUser, opts.InfluxPass, opts.InfluxPrecision); err != nil {
+		log.Println(err)
+		return err
+	}
+
+	if _, err = db.InfluxQueryDB(fmt.Sprintf("CREATE DATABASE %s", opts.InfluxDatabase)); err != nil {
+		log.Println(err)
+	}
+
+	return err
+}
+
+func main() {
 	flag.StringVar(&opts.HTTPHost, "a", "localhost", "HTTP host.")
 	flag.StringVar(&opts.HTTPPort, "r", "7080", " HTTP port.")
 	flag.StringVar(&opts.InfluxHost, "i", "localhost", "InfluxDB host.")
@@ -74,14 +94,10 @@ func main() {
 	}
 
 	// Connect to InfluxDB
-	if err := db.InfluxInit(opts.InfluxHost, opts.InfluxPort, opts.InfluxDatabase,
-		opts.InfluxUser, opts.InfluxPass, opts.InfluxPrecision); err != nil {
-
+	if err := backoff.Retry(tryInfluxInit, backoff.NewExponentialBackOff()); err != nil {
 		log.Fatalf("InfluxDB: Can't connect: %v\n", err)
-	}
-
-	if _, err := db.InfluxQueryDB(fmt.Sprintf("CREATE DATABASE %s", opts.InfluxDatabase)); err != nil {
-		log.Fatal(err)
+	} else {
+		log.Println("OK")
 	}
 
 	// Print banner

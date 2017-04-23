@@ -1,6 +1,8 @@
-hash: b8c08e33e4b38ac7b287edf0e6b13598e29a9de07daa404f1b36b4066b2a4afb
-updated: 2017-04-23T18:15:08.666680825+02:00
+hash: 657db81b1d3bafe01a695f2a621716950dac5ddd9f39938415bfc9c0888ae18a
+updated: 2017-04-23T23:46:31.639148407+02:00
 imports:
+- name: github.com/cenkalti/backoff
+  version: 32cd0c5b3aef12c76ed64aaf678f6c79736be7dc
 - name: github.com/codegangsta/negroni
   version: fde5e16d32adc7ad637e9cd9ad21d4ebc6192535
 - name: github.com/fatih/color
