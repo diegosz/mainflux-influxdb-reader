@@ -103,6 +103,8 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 				m.Protocol = x.(string)
 			case "created":
 				m.Created = x.(string)
+			case "channel":
+				m.Channel = x.(string)
 			}
 		}
 
