@@ -48,11 +48,13 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 		et = time.Now().Format(time.RFC3339)
 	}
 
-	println(st, et)
+	//TODO check cid
 	q := fmt.Sprintf("SELECT * FROM \"%s\" WHERE time >= '%s' AND time <= '%s'", cid, st, et)
+
 	results, e := db.InfluxQueryDB(q)
 	if e != nil {
-		log.Fatal(e)
+		println(e.Error())
+		return
 	}
 
 	a := []models.InfluxMessage{}
