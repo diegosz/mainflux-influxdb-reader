@@ -13,6 +13,7 @@ import (
 	"os"
 	"testing"
 	"log"
+	"fmt"
 
 	"github.com/mainflux/mainflux-influxdb-reader/api"
 	mfdb "github.com/mainflux/mainflux-influxdb-reader/db"
@@ -38,19 +39,15 @@ func TestMain(m *testing.M) {
 	    log.Fatalf("Could not start resource: %s", err)
 	}
 
-	// exponential backoff-retry, because the application in the container
-	// might not be ready to accept connections yet
-	if err := pool.Retry(func() error {
-		// host, port, databse, username, password, precision
-		if err := mfdb.InfluxInit("localhost", "8086", "mainflux", "mainflux",
-		                          "", "s"); err != nil {
-			log.Println(err)
-			return err
-		}
 
-		return err
-	}); err != nil {
-		log.Fatalf("Could not connect to docker: %s", err)
+	// host, port, databse, username, password, precision
+	if err := mfdb.InfluxInit("0.0.0.0", "8086", "mainflux", "mainflux",
+	                          "", "s"); err != nil {
+		log.Println(err)
+	}
+
+	if _, err = mfdb.InfluxQueryDB(fmt.Sprintf("CREATE DATABASE %s", "mainflux")); err != nil {
+		log.Println(err)
 	}
 
 	// Start the HTTP server
