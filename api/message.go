@@ -58,6 +58,13 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check that there are results
+	if len(results[0].Series) == 0 {
+		w.WriteHeader(http.StatusOK)
+		io.WriteString(w, `{"response": "no results found"}`)
+		return
+	}
+
 	a := []models.InfluxMessage{}
 
 	// Put each InfluxDB return value in different SenML message
