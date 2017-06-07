@@ -23,7 +23,7 @@ func HTTPServer() http.Handler {
 	mux.Get("/status", http.HandlerFunc(getStatus))
 
 	// Messages
-	mux.Get("/msg/:channel_id", http.HandlerFunc(getMessage))
+	mux.Get("/channels/:channel_id/messages", http.HandlerFunc(getMessage))
 
 	n := negroni.Classic()
 	n.UseHandler(mux)
