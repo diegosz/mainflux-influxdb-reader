@@ -53,7 +53,8 @@ func getMessage(w http.ResponseWriter, r *http.Request) {
 
 	results, e := db.InfluxQueryDB(q)
 	if e != nil {
-		println(e.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, `{"error": "` + e.Error() + `"}`)
 		return
 	}
 
